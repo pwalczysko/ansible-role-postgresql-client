@@ -32,6 +32,18 @@
     state: present
   when: ansible_facts.get('architecture') is search("x86_64")
 
+- name: Debug PGDG common repository metadata
+  become: true
+  ansible.builtin.command:
+    argv:
+      - dnf
+      - -v
+      - makecache
+      - --refresh
+      - --disablerepo=*
+      - --enablerepo=pgdg-common
+  changed_when: false
+
 - name: Postgres | install client packages
   become: true
   ansible.builtin.dnf:
