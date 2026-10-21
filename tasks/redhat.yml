@@ -17,7 +17,7 @@
 - name: Postgres | setup dnf repository for arch64
   become: true
   ansible.builtin.dnf:
-    update_cache: true
+    update_cache: false
     name:
       https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-aarch64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
@@ -26,7 +26,7 @@
 - name: Postgres | setup dnf repository for amd64
   become: true
   ansible.builtin.dnf:
-    update_cache: true
+    update_cache: false
     name:
       https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
@@ -36,14 +36,15 @@
 - name: Show release variables
   become: true
   ansible.builtin.shell: |
+    echo "=== OS release ==="
+    cat /etc/os-release
+    echo "=== RPM release ==="
     rpm -E '%{rhel}'
-    cat /etc/dnf/vars/releasever 2>/dev/null || true
-    grep -R -n 'releasever' /etc/dnf /etc/yum.repos.d/pgdg*
-  changed_when: false
-
-- name: Show DNF release version
-  become: true
-  ansible.builtin.command: dnf config-manager --dump-variables
+    echo "=== DNF releasever override ==="
+    cat /etc/dnf/vars/releasever 2>/dev/null || echo "(no override)"
+    echo "=== PGDG repository URLs ==="
+    grep -nE '^\[pgdg-common\]|^baseurl=|^metalink=|^mirrorlist=' \
+      /etc/yum.repos.d/pgdg-redhat-all.repo
   changed_when: false
 
 
