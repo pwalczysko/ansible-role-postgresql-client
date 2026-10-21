@@ -32,6 +32,22 @@
     state: present
   when: ansible_facts.get('architecture') is search("x86_64")
 
+
+- name: Show release variables
+  become: true
+  ansible.builtin.shell: |
+    rpm -E '%{rhel}'
+    cat /etc/dnf/vars/releasever 2>/dev/null || true
+    grep -R -n 'releasever' /etc/dnf /etc/yum.repos.d/pgdg*
+  changed_when: false
+
+- name: Show DNF release version
+  become: true
+  ansible.builtin.command: dnf config-manager --dump-variables
+  changed_when: false
+
+
+
 - name: Debug PGDG common repository metadata
   become: true
   ansible.builtin.command:
