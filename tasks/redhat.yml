@@ -45,7 +45,7 @@
     echo "PGDG common repository:"
     grep -A8 '^\[pgdg-common\]' /etc/yum.repos.d/pgdg-redhat-all.repo
     echo "DNF variables:"
-    dnf --dump-variables 2>&1 || true
+    dnf --releasever=9.3 repolist --repo=pgdg-common -v
   register: pgdg_diagnostics
   changed_when: false
 
