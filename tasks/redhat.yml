@@ -36,6 +36,14 @@
 - name: Collect PGDG repository diagnostics
   become: true
   ansible.builtin.shell: |
+    cat /etc/os-release
+    rpm -E '%{rhel}'
+    rpm -qa gpg-pubkey
+    grep -A8 '^\[pgdg-common\]' /etc/yum.repos.d/pgdg-redhat-all.repo
+  register: pgdg_diagnostics
+  changed_when: false name: Collect PGDG repository diagnostics
+  become: true
+  ansible.builtin.shell: |
     echo "OS:"
     cat /etc/os-release
     echo "RPM release:"
