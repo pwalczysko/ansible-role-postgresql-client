@@ -44,6 +44,8 @@
     cat /etc/dnf/vars/releasever 2>/dev/null || echo "(no override)"
     echo "PGDG common repository:"
     grep -A8 '^\[pgdg-common\]' /etc/yum.repos.d/pgdg-redhat-all.repo
+    echo "DNF variables:"
+    dnf --dump-variables 2>&1 || true
   register: pgdg_diagnostics
   changed_when: false
 
