@@ -41,20 +41,6 @@
     rpm -qa gpg-pubkey
     grep -A8 '^\[pgdg-common\]' /etc/yum.repos.d/pgdg-redhat-all.repo
   register: pgdg_diagnostics
-  changed_when: false name: Collect PGDG repository diagnostics
-  become: true
-  ansible.builtin.shell: |
-    echo "OS:"
-    cat /etc/os-release
-    echo "RPM release:"
-    rpm -E '%{rhel}'
-    echo "DNF releasever override:"
-    cat /etc/dnf/vars/releasever 2>/dev/null || echo "(no override)"
-    echo "PGDG common repository:"
-    grep -A8 '^\[pgdg-common\]' /etc/yum.repos.d/pgdg-redhat-all.repo
-    echo "DNF variables:"
-    dnf --releasever=9.3 repolist --repo=pgdg-common -v
-  register: pgdg_diagnostics
   changed_when: false
 
 - name: Print PGDG repository diagnostics
