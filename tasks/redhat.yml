@@ -40,6 +40,20 @@
     replace: 'rhel-$releasever_major-'
     backup: yes
 
+- name: Diagnose PGDG repository after URL rewrite
+  become: true
+  ansible.builtin.shell: |
+    echo "=== OS release ==="
+    cat /etc/redhat-release
+
+    echo "=== PGDG repository configuration ==="
+    grep -n -E '^\[|^baseurl=|^metalink=|^enabled=' \
+      /etc/yum.repos.d/pgdg-redhat-all.repo
+
+    echo "=== PGDG repository metadata ==="
+    dnf repolist -v
+  changed_when: false
+
 - name: Postgres | install client packages
   become: true
   ansible.builtin.dnf:
