@@ -43,15 +43,14 @@
 - name: Diagnose PGDG repository after URL rewrite
   become: true
   ansible.builtin.shell: |
-    echo "=== OS release ==="
-    cat /etc/redhat-release
+    echo "=== PGDG 16 metadata ==="
+    dnf --disablerepo='*' --enablerepo=pgdg16 \
+      --setopt=pgdg16.skip_if_unavailable=True \
+      makecache --refresh -y
 
-    echo "=== PGDG repository configuration ==="
-    grep -n -E '^\[|^baseurl=|^metalink=|^enabled=' \
-      /etc/yum.repos.d/pgdg-redhat-all.repo
-
-    echo "=== PGDG repository metadata ==="
-    dnf repolist -v
+    echo "=== PostgreSQL 16 package URL ==="
+    dnf --disablerepo='*' --enablerepo=pgdg16 \
+      repoquery --location postgresql16-16.16-1PGDG.rhel9.9
   changed_when: false
 
 - name: Postgres | install client packages
